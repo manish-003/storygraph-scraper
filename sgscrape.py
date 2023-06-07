@@ -1,4 +1,5 @@
 import requests
+import re
 from bs4 import BeautifulSoup
 
 
@@ -39,7 +40,38 @@ def peek(bookname):
     burl = 'https://app.thestorygraph.com' + bli.get('href')
     return (bname,seriesname,aname,img,burl)
 
+def mine(burl):
+    bp = BeautifulSoup(requests.get(burl).content, 'lxml')
+    sr = bp.find('span','average-star-rating').text.strip()
+    pre = '<div class="trix-content mt-3"><div>'.strip()
+    post = "</div>".strip()
+    pattern = pre +' *(.|\n)+ *'+post
+    blurb = bp.find('div','blurb-pane').parent.find('script').text
+    inht = re.search(pattern, blurb).group().replace('\\',"")
+    desc = BeautifulSoup(inht,'lxml').text
+    return (sr,desc)
+
+def view(bookname):
+    bname,seriesname, aname,img,burl = peek(bookname)
+    sr,desc = mine(burl)
+    return (bname,seriesname,aname,sr,desc,img,burl)
+
+def genpost(bookname):
+    bname,seriesname, aname,img,burl = peek(bookname)
+    sr,desc = mine(burl)
+    star = "⭐"*round(float(sr))
+    post = \
+f"""
+{bname}
+series: {seriesname}
+{aname}
+{star}({sr}/5.00)
+{desc}
+{burl}
+"""
+    return (img,post)
 
 if __name__ == '__main__':
     #print(search(input(),input()))
-    print(peek(input()))
+    #print(view(peek('dune')[-1]))
+    print(genpost('cursed child')[1])

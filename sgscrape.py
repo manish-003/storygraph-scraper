@@ -67,9 +67,8 @@ series: {seriesname}
 {aname}
 {star}({sr}/5.00)
 {desc}
-{burl}
 """
-    return (img,post)
+    return (img,post,burl)
 
 if __name__ == '__main__':
     #print(search(input(),input()))

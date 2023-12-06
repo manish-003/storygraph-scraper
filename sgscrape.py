@@ -73,4 +73,4 @@ series: {seriesname}
 if __name__ == '__main__':
     #print(search(input(),input()))
     #print(view(peek('dune')[-1]))
-    print(genpost('cursed child')[1])
+    print(genpost('cursed child')[2])

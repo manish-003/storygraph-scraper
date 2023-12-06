@@ -43,11 +43,11 @@ def peek(bookname):
 def mine(burl):
     bp = BeautifulSoup(requests.get(burl).content, 'lxml')
     sr = bp.find('span','average-star-rating').text.strip()
-    pre = '<div class="trix-content mt-3"><div>'.strip()
-    post = "</div>".strip()
-    pattern = pre +' *(.|\n)+ *'+post
     blurb = bp.find('div','blurb-pane').parent.find('script').text
-    inht = re.search(pattern, blurb).group().replace('\\',"")
+    print("blurb is :", blurb)
+    pattern = re.compile(r"\.html\('([^']*(?:\\.[^']*)*)'\)")
+    inht = pattern.search(blurb).group(1)
+    print("after processing :", inht)
     desc = BeautifulSoup(inht,'lxml').text
     return (sr,desc)
 
@@ -73,4 +73,4 @@ series: {seriesname}
 if __name__ == '__main__':
     #print(search(input(),input()))
     #print(view(peek('dune')[-1]))
-    print(genpost('cursed child')[2])
+    print(genpost(input())[2])
